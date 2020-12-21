@@ -2,9 +2,8 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableForeignKey
 } from 'typeorm'
-import { User } from '../entities/User'
+import { User } from '../entities/User.entity'
 
 export class ProductMigration20201221235632 implements MigrationInterface {
   private tableName: string = 'products'
