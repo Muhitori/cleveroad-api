@@ -5,8 +5,8 @@ import {
 } from 'typeorm'
 import { User } from '../entities/User.entity'
 
-export class ProductMigration20201221235632 implements MigrationInterface {
-  private tableName: string = 'products'
+export class ItemMigration20201221235632 implements MigrationInterface {
+  private tableName: string = 'items'
   async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({

@@ -7,8 +7,8 @@ import {
 } from 'typeorm'
 import { User } from './User.entity'
 
-@Entity('products')
-export class Product {
+@Entity('items')
+export class Item {
   @PrimaryGeneratedColumn()
   public id: number
 
@@ -27,7 +27,7 @@ export class Product {
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date
 
-  @ManyToOne(() => Product, (product) => product.user)
+  @ManyToOne(() => Item, (item) => item.user)
   public user: User
 
   constructor(title: string, price: number, image: string, userId: number) {
