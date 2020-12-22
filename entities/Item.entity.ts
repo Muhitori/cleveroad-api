@@ -22,7 +22,7 @@ export class Item {
   public image: string
 
   @Column('int')
-  public userId: number
+  public user_id: number
 
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date
@@ -30,10 +30,10 @@ export class Item {
   @ManyToOne(() => Item, (item) => item.user)
   public user: User
 
-  constructor(title: string, price: number, image: string, userId: number) {
+  constructor(title: string, price: number, image: string, user_id: number) {
     this.title = title
     this.price = price
     this.image = image
-    this.userId = userId
+    this.user_id = user_id
   }
 }
