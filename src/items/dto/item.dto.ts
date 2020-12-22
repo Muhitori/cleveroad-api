@@ -10,7 +10,7 @@ export class ItemDto {
 
   public image: string
 
-  public user_id: number
+  public userId: number
 
   @IsDate()
   public created_at: Date

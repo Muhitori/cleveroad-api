@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from 'entities/Item.entity';
+import { resolve } from 'path';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { ItemDto } from './dto/item.dto';
@@ -14,12 +15,42 @@ export class ItemsService {
   ) {}
 
   async getItems(): Promise<ItemDto[] | []> {
-    let items: ItemDto[] = await this.itemRepo.find();
-    
-    return items
+    return await this.itemRepo.find({
+      join: {
+        alias: 'items',
+        leftJoinAndSelect: {
+          user: 'items.user'
+        }
+      }
+    })
   }
 
   async getItemById(id: number): Promise<ItemDto | undefined> {
-    return this.itemRepo.findOne(id)
+    const item = await this.itemRepo.findOne({
+      join: {
+        alias: 'items',
+        leftJoinAndSelect: {
+          user: 'items.user',
+        }
+      }
+    })
+
+    return item
+  }
+
+  async createItem() {
+
+  }
+
+  async updateItem(item: ItemDto, id: number) {
+    
+  }
+
+  async deleteItem(id: number) {
+
+  }
+
+  async uploadPhoto() {
+
   }
 }

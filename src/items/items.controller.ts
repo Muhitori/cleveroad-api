@@ -13,7 +13,7 @@ export class ItemsController {
   }
 
   @Public()
-  @Get('items/:id')
+  @Get(':id')
   async getItemById(@Param('id') id: number) {
     return this.itemsService.getItemById(id)
   }

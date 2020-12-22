@@ -3,7 +3,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 
 @Entity('users')
 export class User {
@@ -32,13 +31,5 @@ export class User {
     this.name = name
     this.phone = phone
     this.password = password
-  }
-
-  hashPassword() {
-    this.password = bcrypt.hashSync(this.password, 2);
-  }
-
-  async unecryptedPasswordIsValid(password: string) {
-    return await bcrypt.compare(password, this.password);
   }
 }

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
@@ -22,7 +23,7 @@ export class Item {
   public image: string
 
   @Column('int')
-  public user_id: number
+  public userId: number
 
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date
@@ -30,10 +31,10 @@ export class Item {
   @ManyToOne(() => Item, (item) => item.user)
   public user: User
 
-  constructor(title: string, price: number, image: string, user_id: number) {
+  constructor(title: string, price: number, image: string, userId: number) {
     this.title = title
     this.price = price
     this.image = image
-    this.user_id = user_id
+    this.userId = userId
   }
 }

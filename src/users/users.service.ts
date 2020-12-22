@@ -11,15 +11,15 @@ export class UsersService {
     private readonly userRepo: Repository<User>
   ) { }
   
-  async findByEmail(email: string): Promise<UserDto | undefined> {
+  async findByEmail(email: string): Promise<UserDto | null> {
     return this.userRepo.findOne({ email: email })
   }
 
-  async getUserById(id: number): Promise<UserDto | undefined> {
+  async getUserById(id: number): Promise<UserDto | null> {
     return this.userRepo.findOne(id)
   }
 
-  async findAll(): Promise<UserDto[] | undefined> {
+  async findAll(): Promise<UserDto[] | []> {
     return this.userRepo.find()
   }
 

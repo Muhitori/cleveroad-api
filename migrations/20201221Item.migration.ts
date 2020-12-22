@@ -37,7 +37,7 @@ export class ItemMigration20201221235632 implements MigrationInterface {
             isNullable: true
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'int',
             isNullable: true
           },
@@ -53,7 +53,7 @@ export class ItemMigration20201221235632 implements MigrationInterface {
 
     await queryRunner.query(
       `ALTER TABLE ${this.tableName} ADD CONSTRAINT FK_products_user
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE`
+      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE`
     )
 
     const [
@@ -70,7 +70,7 @@ export class ItemMigration20201221235632 implements MigrationInterface {
     }
 
     await queryRunner.query(
-      `INSERT INTO ${this.tableName} (title, price, image, user_id)
+      `INSERT INTO ${this.tableName} (title, price, image, userId)
       VALUES ('${product.title}', ${product.price}, ${product.image}, '${product.user_id}');`,
     )
 }
