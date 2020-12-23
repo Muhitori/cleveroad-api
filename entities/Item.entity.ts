@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn
@@ -28,7 +29,7 @@ export class Item {
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date
 
-  @ManyToOne(() => Item, (item) => item.user)
+  @ManyToOne(() => User, (user) => user.items)
   public user: User
 
   constructor(title: string, price: number, image: string, userId: number) {

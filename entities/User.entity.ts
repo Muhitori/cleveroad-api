@@ -1,8 +1,10 @@
 import {
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Item } from './Item.entity';
 
 @Entity('users')
 export class User {
@@ -20,6 +22,9 @@ export class User {
 
   @Column('varchar')
   public password: string;
+
+  @OneToMany(() => Item, (item) => item.user)
+  public items: Item[]
 
   constructor(
     email: string,
