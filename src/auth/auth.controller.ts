@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req, Get, Res, UnauthorizedException, Header } from '@nestjs/common'
+import { Controller, Post, Body, UseGuards, Req, Get, Header } from '@nestjs/common'
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserDto } from 'src/users/dto/User.dto'
@@ -6,7 +6,7 @@ import { LoginUserDto } from 'src/users/dto/LoginUser.dto';
 import { Request} from 'express';
 import { Public } from 'src/decorators/public.decorator';
 
-@Controller('auth')
+@Controller('api')
 export class AuthController {
   constructor(private authService: AuthService) {}
 

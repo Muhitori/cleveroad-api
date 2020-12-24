@@ -1,16 +1,16 @@
-import { Body, Controller, Delete, Get, Header, Param, Post, Put, Req, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Request, Response } from 'express';
-import { diskStorage } from 'multer'
-import { extname } from 'path'
-import { Public } from 'src/decorators/public.decorator';
-import { CreateItemDto } from './dto/createItem.dto';
-import { UpdateItemDto } from './dto/updateItem.dto';
-import { ItemsService } from './items.service';
+import { Body, Controller, Delete, Get, Header, Param, Post, Put, Req, Res, UseInterceptors, UploadedFile, Catch, PayloadTooLargeException, UseFilters } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { Request, Response } from 'express'
+import { Public } from 'src/decorators/public.decorator'
+import { CreateItemDto } from './dto/createItem.dto'
+import { UpdateItemDto } from './dto/updateItem.dto'
+import { ItemsService } from './items.service'
+import { multerOptions } from 'config/storage.config'
+import { HttpExceptionFilter } from './httpEcxeption.filter'
 
 @Controller('api/items')
 export class ItemsController {
-  SERVER_URL: string = 'http://localhost:3000/'
+  private SERVER_URL: string = 'http://localhost:3000'
   constructor(private itemsService: ItemsService) {}
 
   @Public()
@@ -51,28 +51,15 @@ export class ItemsController {
   ) {
     const userId = request.user['id']
     this.itemsService.deleteItem(id, userId)
-    return response.json({})
+    return response.status(200).json({})
   }
 
-  @Header('Content-Type', 'multipart/form-data')
   @Post(':id/images')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './images',
-        filename: (req, file, cb) => {
-          return file.originalname
-        }
-      })
-    })
-  )
-  uploadImage(
-    @Req() request: Request,
-    @Param('id') id: number,
-    @UploadedFile() file
-  ) {
+  @UseFilters(new HttpExceptionFilter())
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  uploadImage(@Req() request: Request, @Param('id') id: number, @UploadedFile() image) {
     const userId = request.user['id']
-    console.log(`${this.SERVER_URL}${file.path}`)
-    //return this.itemsService.uploadImage(id, userId, `${this.SERVER_URL}${image.path}`)
+    const url = `${this.SERVER_URL}/images/${image.filename}`
+    return this.itemsService.uploadImage(id, userId, url)
   }
 }

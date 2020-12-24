@@ -1,8 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from 'entities/Item.entity';
-import { response } from 'express';
-import { resolve } from 'path';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateItemDto } from './dto/createItem.dto';
@@ -53,7 +51,19 @@ export class ItemsService {
       })
     }
 
-    this.checkFields(<ItemDto>item)
+    if (item.title.length < 3) {
+      throw new UnprocessableEntityException({
+        field: 'title',
+        message: 'Title should contain at least 3 characters'
+      })
+    }
+
+    if (!item.price) {
+      throw new UnprocessableEntityException({
+        field: 'price',
+        message: 'price is required'
+      })
+    }
 
     item.userId = userId
 
@@ -74,7 +84,7 @@ export class ItemsService {
       })
     }
 
-    await this.itemRepo.update(id, { title: item.title, price: item.price })
+    await this.itemRepo.update(id, item)
     return this.getItemById(id)
   }
 
@@ -91,8 +101,8 @@ export class ItemsService {
 
     this.checkAccess(userId, <ItemDto>oldItem)
 
-    await this.itemRepo.update(id, {image: imageUrl})
-    
+    await this.itemRepo.update(id, { image: imageUrl })
+
     return this.getItemById(id)
   }
 
@@ -103,22 +113,6 @@ export class ItemsService {
 
     if (item.userId != userId) {
       throw new ForbiddenException({})
-    }
-  }
-
-  checkFields(item: ItemDto) {
-    if (item.title.length < 3) {
-      throw new UnprocessableEntityException({
-        field: 'title',
-        message: 'Title should contain at least 3 characters'
-      })
-    }
-
-    if (!item.price) {
-      throw new UnprocessableEntityException({
-        field: 'price',
-        message: 'price is required'
-      })
     }
   }
 }
