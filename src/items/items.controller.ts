@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Header, Param, Post, Put, Req, Res, UseInterceptors, UploadedFile, Catch, PayloadTooLargeException, UseFilters } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Request, Response } from 'express'
+import * as fs from 'fs'
 import { Public } from 'src/decorators/public.decorator'
+import { HttpExceptionFilter } from './httpEcxeption.filter'
 import { CreateItemDto } from './dto/createItem.dto'
 import { UpdateItemDto } from './dto/updateItem.dto'
 import { ItemsService } from './items.service'
 import { multerOptions } from 'config/storage.config'
-import { HttpExceptionFilter } from './httpEcxeption.filter'
 
 @Controller('api/items')
 export class ItemsController {
@@ -58,8 +59,14 @@ export class ItemsController {
   @UseFilters(new HttpExceptionFilter())
   @UseInterceptors(FileInterceptor('file', multerOptions))
   uploadImage(@Req() request: Request, @Param('id') id: number, @UploadedFile() image) {
+    const dir = `${__dirname}/../../../images`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir)
+    }
+
     const userId = request.user['id']
     const url = `${this.SERVER_URL}/images/${image.filename}`
+    
     return this.itemsService.uploadImage(id, userId, url)
   }
 }
